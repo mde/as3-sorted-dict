@@ -13,7 +13,7 @@ Copyright 2009, Matthew Eernisse (mde@fleegix.org)
  See the License for the specific language governing permissions and
  limitations under the License.
 */
-package util {
+package org.mde.collections {
   public class SortedDict {
     public var count:int;
     protected var items:Object;
