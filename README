@@ -1,0 +1,18 @@
+AS3 Sorted Dictionary
+
+Overview
+------------------------
+
+A collection of key/value pairs that are sorted in a specific
+order. Includes iteration methods and some array-style methods
+(e.g., push/pop).
+
+The author
+------------------------
+
+Please feel free to send comments or bug reports to
+mde@fleegix.org.
+
+------------------------------------------------------------
+Code and docs, copyright 2009, Matthew Eernisse.
+
