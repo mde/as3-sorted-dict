@@ -15,18 +15,33 @@ Copyright 2009, Matthew Eernisse (mde@fleegix.org)
 */
 package org.mde.collections {
   public class SortedDict {
-    public var count:int;
-    protected var items:Object;
-    protected var order:Array;
-    protected var defaultValue:*;
+    /**
+    * The number of items in the SortedDict -- avoid the use of the word
+    * 'length' to avoid confusion from code that naively assumes presence
+    * of that property means an Array.
+    */
+    private var _count:int;
+    /**
+    * The items in the SortedDict, stored as a keyword/value Object.
+    */
+    private var items:Object;
+    /**
+    * An array of the item keys to indicate the current sort order of
+    * the SortedDict.
+    */
+    private var order:Array;
 
-    public function SortedDict(...args):void {
-      this.count = 0;
+    /**
+    * Creates a new SortedDict instance.
+    */
+    public function SortedDict():void {
+      this._count = 0;
       this.items = {}; // Hash keys and their values
       this.order = []; // Array for sort order
-      if (args.length) {
-        this.defaultValue = args[0];
-      }
+    }
+
+    public function get count():int {
+      return _count;
     }
 
     /**
@@ -151,7 +166,7 @@ package org.mde.collections {
 
     /**
     * Checks for the existence of an item with the given value in the
-    * SortedDict. Note that this check uses the triple-equal (===)
+    * SortedDict. Note that this check uses a strict triple-equal (===)
     * to check for equality.
     *
     * @param val The item value to look for.
@@ -215,7 +230,7 @@ package org.mde.collections {
     public function insertAtIndex(index:int, key:String, val:*):void {
       order.splice(index, 0, key);
       items[key] = val;
-      count++;
+      _count++;
     }
 
     /**
@@ -341,12 +356,12 @@ package org.mde.collections {
     * @param key The key for the new item.
     * @param value The value for the new item.
     *
-    * @return The new count of items in the SortedDict after adding
+    * @return The new _count of items in the SortedDict after adding
     * the item.
     */
     public function push(key:String, val:*):int {
-      insertAtIndex(count, key, val);
-      return count;
+      insertAtIndex(_count, key, val);
+      return _count;
     }
 
     /**
@@ -360,11 +375,11 @@ package org.mde.collections {
     * @return The item at the end of the current sort in the SortedDict.
     */
     public function pop():* {
-      if (count == 0) {
+      if (_count == 0) {
         return null;
       }
       else {
-        var pos:int = count - 1;
+        var pos:int = _count - 1;
         var ret:* = items[order[pos]];
         removeByIndex(pos);
         return ret;
@@ -381,12 +396,12 @@ package org.mde.collections {
     * @param key The key for the new item.
     * @param value The value for the new item.
     *
-    * @return The new count of items in the SortedDict after adding
+    * @return The new _count of items in the SortedDict after adding
     * the item.
     */
     public function unshift(key:String, val:*):int {
       insertAtIndex(0, key, val);
-      return count;
+      return _count;
     }
 
     /**
@@ -400,7 +415,7 @@ package org.mde.collections {
     * @return The item at the beginning of the current sort in the SortedDict.
     */
     public function shift(key:String, val:*):* {
-      if (count == 0) {
+      if (_count == 0) {
         return null;
       }
       else {
@@ -454,7 +469,7 @@ package org.mde.collections {
         newOrder.unshift(index);
         order.splice.apply(order, newOrder);
       }
-      count = order.length;
+      _count = order.length;
     };
 
     /**
@@ -547,16 +562,11 @@ package org.mde.collections {
     }
 
     private function setByKey(key:String, val:*):void {
-      var v:* = null;
-      if (arguments.length == 1) {
-        v = defaultValue;
-      }
-      else { v = val; }
       if (!(key in items)) {
-        order[count] = key;
-        count++;
+        order[_count] = key;
+        _count++;
       }
-      items[key] = v;
+      items[key] = val;
     }
 
     private function removeByKey(key:String):void {
@@ -570,7 +580,7 @@ package org.mde.collections {
           }
         }
         order.splice(pos, 1); // Remove the key
-        count--; // Decrement the length
+        _count--; // Decrement the length
       }
     }
 
@@ -580,19 +590,19 @@ package org.mde.collections {
     }
 
     private function setByIndex(ind:int, val:*):void {
-      if (ind < 0 || ind >= count) {
-        throw new Error('Index out of bounds. SortedDict length is ' + count);
+      if (ind < 0 || ind >= _count) {
+        throw new Error('Index out of bounds. SortedDict length is ' + _count);
       }
       items[order[ind]] = val;
     }
 
     private function removeByIndex(ind:int):void {
-      if (ind < 0 || ind >= count) {
-        throw new Error('Index out of bounds. SortedDict length is ' + count);
+      if (ind < 0 || ind >= _count) {
+        throw new Error('Index out of bounds. SortedDict length is ' + _count);
       }
       delete items[order[ind]]
       order.splice(ind, 1);
-      count--;
+      _count--;
     }
 
   }
