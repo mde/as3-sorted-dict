@@ -570,7 +570,7 @@ package org.mde.collections {
     }
 
     private function removeByKey(key:String):void {
-      if (!(key in items)) {
+      if (key in items) {
         var pos:int;
         delete items[key]; // Remove the value
         // Find the key in the order list
